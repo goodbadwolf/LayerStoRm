@@ -305,12 +305,22 @@ def detect_gpus(proc_root: str = "/proc", sys_root: str = "/sys",
         gpu_type = detect_gpu_type(name)
         pci_dir = os.path.join(sys_root, "bus/pci/devices", bus_id)
         numa_node = _parse_int(_read(os.path.join(pci_dir, "numa_node")), -1)
+        if numa_node < 0:
+            online = _read(os.path.join(sys_root, "devices/system/node/online"))
+            if online is not None and online.strip() == "0":
+                numa_node = 0
         gen_max = _parse_link_gen(_read(os.path.join(pci_dir, "max_link_speed")))
         width_max = _parse_int(_read(os.path.join(pci_dir, "max_link_width")), 0)
         bar1 = _bar1_span_bytes(_read(os.path.join(pci_dir, "resource")))
         if bar1 >= 4 << 30:  # a resizable BAR1 mapping the whole framebuffer
             vram_mib = bar1 // (1 << 20)
             vram_source = "bar1"
+            if nvml_vram is None:
+                nvml_vram = query_nvml_vram_mib()
+            nvml_mib = nvml_vram.get(bus_id, 0)
+            if 0 < nvml_mib < vram_mib:
+                vram_mib = nvml_mib
+                vram_source = "nvml"
         else:
             # ReBAR off: the span is a 256 MiB window, not the framebuffer.
             if nvml_vram is None:

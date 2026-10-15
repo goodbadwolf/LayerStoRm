@@ -41,7 +41,7 @@ command -v g++   >/dev/null || missing+=(build-essential)
 command -v cmake >/dev/null || missing+=(cmake)
 command -v git   >/dev/null || missing+=(git)
 command -v python3 >/dev/null || missing+=(python3)
-have_lib() { ldconfig -p 2>/dev/null | grep -q "$1"; }
+have_lib() { ldconfig -p 2>/dev/null | grep "$1" >/dev/null; }
 have_lib libnuma.so   || missing+=(libnuma-dev)
 have_lib liburing.so  || missing+=(liburing-dev)
 have_lib libnccl.so   || missing+=("libnccl2 libnccl-dev")

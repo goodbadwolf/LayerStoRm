@@ -17,6 +17,11 @@ int read_numa_node(const std::string& pci_bus_id) {
     if (!f) return -1;
     int node = -1;
     f >> node;
+    if (node < 0) {
+        std::ifstream online("/sys/devices/system/node/online");
+        std::string list;
+        if (online >> list && list == "0") return 0;
+    }
     return node;
 }
 

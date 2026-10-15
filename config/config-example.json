@@ -451,6 +451,7 @@
     "port": 8000,
     "max_concurrent_requests": 32,
     "max_queued_requests": 16,
+    "sse_heartbeat_seconds": 15,
     "max_sequence_length": 32768,
     "tokenizer_path": "auto",
     "tool_call_parser": "",
@@ -635,7 +636,14 @@
     "min_seq_for_pairing": 16384,
     "device_pool_round_pages": 1024,
     "expert_gib_quantum": 0.5,
-    "min_max_seq": 4096
+    "min_max_seq": 4096,
+    "moe_fit_fixed_attn_mib": 2224,
+    "moe_fit_fixed_expert_mib": 1627,
+    "moe_fit_headroom_cushion": 1.15,
+    "moe_fit_free_floor_mib": 256,
+    "runtime_margin_quantum_gb": 0.25,
+    "stride_margin_cap_gb": 6,
+    "block_table_budget_gb": 1.5
   },
   "_internal-kda_state": {
     "mapped": true
